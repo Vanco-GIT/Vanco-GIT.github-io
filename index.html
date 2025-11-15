@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <title>同舟TongZhou</title>
+    <style>
+        @font-face {
+          font-family: Minecraftia;
+          font-style: normal;
+          font-weight: 400;
+          src: url('https://fonts.cdnfonts.com/s/31977/Minecraftia.woff') format('woff');
+          unicode-range: U+0020-007E; /* 覆盖所有英文、数字、常见符号 */
+          font-display: swap;
+        }
+        @font-face {
+          font-family: hy;
+          src: url('https://vanco.neocities.org/HanYiLingXinTiJian-1.ttf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+        }
+        
+        @font-face {
+          font-family: dzt1;
+          src: url('https://vanco.neocities.org/BoutiqueBitmap9x9_3D%EF%BC%88%E7%AB%8B%E4%BD%93%E7%89%88%EF%BC%89.ttf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+        }         
+        @font-face {
+          font-family: dzt2;
+          src: url('https://vanco.neocities.org/BoutiqueBitmap9x9_1.9%EF%BC%88%E5%B8%B8%E8%A7%84%E4%BD%93%EF%BC%89.ttf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+        }       
+
+        @font-face {
+          font-family: ddjbt;
+          src: url('https://vanco.neocities.org/DingTalk-JinBuTi.woff') format('woff2'),
+               url('https://vanco.neocities.org/DingTalk-JinBuTi.woff2') format('woff');
+          unicode-range: U+4E00-9FFF;
+          font-display: swap;
+        }
+        
+        @font-face {
+          font-family: Comfortaa;
+          src: url('https://fonts.cdnfonts.com/s/14867/Comfortaa-Bold.woff2') format('woff2'),
+               url('https://fonts.cdnfonts.com/s/14867/Comfortaa-Bold.woff') format('woff');
+          font-weight: 700;
+          font-style: normal;
+          font-display: swap;
+        }
+        /* 基础重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: dzt2, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        /* 基础按钮样式 */
+        .jump-button {
+            font-family: dzt2, sans-serif;
+            /* 严格尺寸控制 */
+            width: 200px;
+            height: 50px;
+            box-sizing: border-box;
+            
+            /* 纯净无边框设计 */
+            background-color: transparent;
+            color: black;
+            border: none !important; /* 强制去除所有边框 */
+            outline: none; /* 移除焦点轮廓 */
+            
+            /* 文字完美居中 */
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+            line-height: 50px; /* 简化垂直居中 */
+            
+            /* 交互效果 */
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(0);
+            opacity: 0.9;
+            
+            /* 文字处理 */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            
+            /* 防止点击闪动 */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .jump-button:hover {
+            background-color: #1f1e33;
+            color: white;
+            transform: translateY(-6px);
+            box-shadow: 0 6px 12px rgba(31, 30, 51, 0.2);
+            opacity: 1;
+            border-radius: 0.5rem;
+        }
+
+        /* 点击时的微反馈 */
+        .jump-button:active {
+            transform: translateY(-4px);
+            transition-duration: 0.15s;
+        }
+        
+        /* 粘性顶栏 */
+        .top-bar {
+            font-family: dzt2, sans-serif;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            height: 60px; /* 固定高度 */
+            background-color: #1f1e33AA;
+            color: white;
+            display: flex;
+            align-items: center; /* 垂直居中 */
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+        }
+        
+        .TZ {
+            font-family: dzt1, sans-serif;          
+            font-size: 30px;
+            font-weight: bold;
+            transform: translateX(0px); 
+            transition: transform 0.3s ease;
+        }
+        
+        .TZ:hover {
+          transform: translateX(10px); 
+          transition: transform 0.3s ease;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            height: 100%; /* 继承父级高度 */
+            align-items: center; /* 添加垂直居中 */
+        }       
+        /* 修正基础链接样式 */
+        .nav-links > a, 
+        .nav-links .dropdown > a {
+            color: white;
+            text-decoration: none;
+            padding: 0 10px;
+            line-height: 60px; /* 与导航栏高度一致 */
+            display: inline-flex;
+            align-items: center;
+            position: relative;
+        }
+        /* 下拉菜单容器 */
+        .dropdown {
+            position: relative;
+            height: 100%;
+        }
+        
+        /* 下拉菜单内容（默认隐藏） */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            background-color: #1f1e33c6;
+            min-width: 100%; /* 改为100%宽度 */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 101;
+            border-radius: 0 0 5px 5px;
+            /* 新增以下属性实现水平排列 */
+            display: none;
+            white-space: nowrap; /* 禁止换行 */
+            padding: 10px; /* 添加内边距 */
+        }
+        
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: inline-block; /* 改为行内块级元素 */
+            transition: background-color 0.3s;
+            border-right: 1px solid #666; /* 可选分隔线 */
+        }
+        
+        /* 移除最后一个菜单项的分隔线 */
+        .dropdown-content a:last-child {
+            border-right: none;
+        }
+        
+        /* 下拉菜单项 */
+        .dropdown-content a {
+            color: white;
+            padding: 8px 5px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #686868c6;
+            border-radius: 0.5rem;
+        }
+        
+        /* 鼠标悬停时显示下拉菜单 */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        
+        /* 下拉箭头指示 */
+        .dropdown:after {
+            content: "▼";
+            font-size: 10px;
+            margin-left: 5px;
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+        
+        .dropdown:hover:after {
+            transform: rotate(180deg);
+        }
+        
+        /* 中央矩形展示区 */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(80vh - 60px); /* 减去顶栏高度 */
+            padding: 20px;
+            gap: 20px; /* 添加间距 */
+        }
+        
+        .content-box {
+            background-image: linear-gradient(135deg, #1f1e33 0%, #686868 100%) !important;
+            width: 60%; /* 调整为60%宽度 */
+            max-width: 800px;
+            height: 400px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden; 
+        }
+        
+        /* 运势模块样式 */
+        .fortune-box {
+            width: 30%; /* 调整为30%宽度 */
+            max-width: 300px;
+            height: 400px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .fortune-title {
+            font-size: 1.5rem;
+            color: #6A4A9C;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .fortune-result {
+            font-size: 2.5rem;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            width: 100%;
+        }
+        
+        .da-ji {
+            color: #e74c3c;
+            background-color: #fadbd8;
+        }
+        
+        .ji {
+            color: #e67e22;
+            background-color: #fdebd0;
+        }
+        
+        .zhong {
+            color: #f39c12;
+            background-color: #fef9e7;
+        }
+        
+        .xiong {
+            color: #3498db;
+            background-color: #eaf2f8;
+        }
+        
+        .da-xiong {
+            color: #2c3e50;
+            background-color: #ebedef;
+        }
+        
+        .fortune-explanation {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .fortune-date {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+        
+        /* 页面其他内容 */
+        .other-content {
+            background-image: linear-gradient(180deg, #fff 0%, #add8e6 100%) !important;
+            min-height: 1500px;
+            padding: 20px;
+            background-color: #eee;
+            text-align: center; 
+        }
+        /*图片样式*/
+        .centered-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        
+        .clock-container {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transform: translateY(-30px); 
+            transition: transform 0.3s ease;
+        }
+        
+        .date {
+            font-size: 1.5rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .time {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .colon {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .clock-container:hover {
+          transform: translateY(0px); /* 向上移动5像素 */
+          transition: transform 0.3s ease;
+        }
+        .divider {
+          height: 5px;
+          border: 0;
+          background: linear-gradient(to right, transparent, #1f1e33, transparent);
+          margin: 2em 0;
+        }
+        
+        .header {
+          font-family: ddjbt, sans-serif;          
+          color: #8D6EC7;
+          transform: translateY(0px); 
+          background-image: url("https://lowiro.com/img/btn/arc-btn.png"); 
+          background-position: center; /* 图片居中 */
+          background-repeat: no-repeat; /* 禁止重复 */
+          transition: transform 0.3s ease;
+        }
+        .header:hover {
+          color: #ffffff;
+          transform: translateY(-3px); 
+          background-image: url("https://lowiro.com/img/btn/arc-btn-hover.png"); 
+          background-position: center; /* 图片居中 */
+          background-repeat: no-repeat; /* 禁止重复 */
+          transition: transform 0.3s ease;
+        }
+        
+        .header-no-image {
+          font-family: ddjbt, sans-serif;            
+          color: #8D6EC7;
+          transform: translateY(0px); 
+          transition: transform 0.3s ease;
+        }
+        .header-no-image:hover {
+          transform: translateY(-3px); 
+          transition: transform 0.3s ease;
+        }
+        /* 横向滚动容器 */
+        .horizontal-scroll-container {
+          display: flex;
+          overflow-x: auto; /* 启用横向滚动 */
+          gap: 20px;
+          padding: 20px 0;
+          -webkit-overflow-scrolling: touch; /* iOS平滑滚动 */
+        }
+        
+        /* 禁止flex子项收缩 */
+        .section-card {
+          transform: translateY(0px); 
+          transition: transform 0.3s ease;
+          flex: 0 0 280px; /* 固定宽度，不伸缩 */
+          background: white;
+          border-radius: 12px;
+          padding: 25px;
+          box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .section-card:hover {
+          transform: translateY(-3px); 
+          transition: transform 0.3s ease;
+        }
+        
+        /* 隐藏滚动条（可选） */
+        .horizontal-scroll-container::-webkit-scrollbar {
+          display: none;
+        }
+        
+        .section-card {
+          transform: translateY(0px); 
+          transition: transform 0.3s ease;
+          flex: 0 0 400px; /* 增加卡片宽度 */
+          background: white;
+          border-radius: 12px;
+          padding: 0; /* 移除内边距，改为内部元素控制 */
+          box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+          display: flex; /* 改为flex布局 */
+          overflow: hidden; /* 防止图片溢出 */
+          height: 200px; /* 固定高度 */
+        }
+        
+        .card-image {
+          width: 120px; /* 固定图片宽度 */
+          height: 100%;
+          object-fit: cover; /* 保持图片比例 */
+          background-color: #f0f0f0; /* 图片加载前的背景色 */
+          filter: blur(1px);
+        }
+        
+        .card-content {
+          flex: 1; /* 占据剩余空间 */
+          padding: 15px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+        
+        .card-title {
+          font-size: 1.2rem;
+          font-weight: bold;
+          margin-bottom: 10px;
+          color: #8D6EC7;
+        }
+        
+        .card-description {
+          font-size: 0.9rem;
+          color: #555;
+          line-height: 1.4;
+        }
+        a {
+            color: #0066cc;
+            text-decoration: none;
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 3px;
+        }
+        
+        /* 链接悬停效果 */
+        a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #8a2be2; /* 紫色 */
+            transition: width 0.3s ease;
+        }
+        
+        a:hover::after {
+            width: 100%;
+        }
+        
+        /* 鼠标移出时的反向动画 */
+        a:not(:hover)::after {
+            right: 0;
+            left: auto;
+            transition: width 0.3s ease;
+        }
+        .members-container {
+          display: flex;
+          overflow-x: auto; /* 启用横向滚动 */
+          gap: 20px;
+          padding: 20px 0;
+          -webkit-overflow-scrolling: touch; /* iOS平滑滚动 */
+          justify-content: center; /* 保持居中 */
+          align-items: flex-start; /* 对齐方式 */
+        }
+        
+        /* 每列成员 */
+        .members-column {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          max-width: 220px; /* 每列的最大宽度 */
+          flex: 1; /* 允许每列自动扩展 */
+        }   
+    </style>
+    
+</head>
+
+<body>  
+    <div class="top-bar">
+        <div class="TZ">同舟</div>
+        <div class="nav-links">
+            <a href="https://vanco.neocities.org/">首页</a>
+            <a href="https://vanco.neocities.org/accountsaver">账号保存</a>    
+            <a href="https://vanco.neocities.org/florr">florr部官网</a> 
+            <div class="dropdown">
+              <a href="#">旗下产品</a>
+              <div class="dropdown-content">
+                  <a href="https://vanco.neocities.org/betterbloxd">BetterBloXD材质包(官网)</a>
+                  <a href="https://bloxd.wikidot.com/texturepack:betterbloxd">BetterBloXD材质包(指引站)</a>
+                  <a href="https://bloxd.wikidot.com/texturepack:betterbloxd">NEXTGEN材质包</a>
+                  <a href="https://vanco.neocities.org/accountsaver">同舟Bloxd账号保存器</a>    
+                  <a href="https://vanco.neocities.org/encrypt">加密器</a>  
+              </div>
+            </div>
+            
+            <div class="dropdown">
+              <a href="#">小游戏</a>
+              <div class="dropdown-content">
+                  <a href="https://vanco.neocities.org/mmc">记忆配对</a>
+                  <a href="https://vanco.neocities.org/typetest">打字挑战</a>
+                  <a href="https://vanco.neocities.org/snakegame">贪吃蛇</a>
+                  <a href="https://vanco.neocities.org/wzq">五子棋</a>
+                  <a href="https://vanco.neocities.org/qcz">千词斩</a>
+              </div>
+            </div>
+            <a href="https://vanco.neocities.org/ArcaeaDownload">Arcaea快捷下载</a>
+            <a href="https://nightly.paw.msgbyte.com/invite/zS_zxL6Z">加入我们</a>
+        </div>
+    </div>
+        <div class="clock-container">
+        <div class="date" id="current-date">1900年1月1日 星期三</div>
+        <div class="time" id="current-time">11:45:14</div>
+    </div>
+
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            
+            // 格式化日期
+            const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${weekdays[now.getDay()]}`;
+            
+            // 格式化时间
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeStr = `${hours}<span class="colon">:</span>${minutes}<span class="colon">:</span>${seconds}`;
+            
+            // 更新DOM
+            document.getElementById('current-date').textContent = dateStr;
+            document.getElementById('current-time').innerHTML = timeStr;
+        }
+        
+        // 立即执行一次
+        updateDateTime();
+        
+        // 每秒更新一次
+        setInterval(updateDateTime, 1000);
+    </script>
+    
+    <div class="main-container">
+        <div class="content-box">
+            <img 
+                class="centered-image" 
+                src="https://iili.io/3X38wpp.png" 
+                alt="LOGO"
+            >
+        </div>
+        
+        <div class="fortune-box">
+            <div class="fortune-title">今日运势</div>
+            <div id="fortune-result" class="fortune-result"></div>
+            <div id="fortune-explanation" class="fortune-explanation"></div>
+            <div id="fortune-date" class="fortune-date"></div>
+        </div>
+    </div>
+    
+    <script>
+        // 运势数据
+        const fortunes = [
+            {
+                level: "大凶",
+                colorClass: "da-xiong",
+                explanation: "今日诸事不宜，建议低调行事，避免重大决策。可能会有意外阻碍，保持耐心。"
+            },
+            {
+                level: "凶",
+                colorClass: "xiong",
+                explanation: "今日运势不佳，做事需谨慎。可能会有小麻烦，但保持冷静可化解。"
+            },
+            {
+                level: "中",
+                colorClass: "zhong",
+                explanation: "今日运势平平，无大起大落。按部就班即可，可能会有小惊喜。"
+            },
+            {
+                level: "吉",
+                colorClass: "ji",
+                explanation: "今日运势不错，适合尝试新事物。机会较多，但需主动把握。"
+            },
+            {
+                level: "大吉",
+                colorClass: "da-ji",
+                explanation: "今日运势极佳！心想事成的好日子，适合重要决策和行动。"
+            }
+        ];
+
+        // 获取DOM元素
+        const resultElement = document.getElementById('fortune-result');
+        const explanationElement = document.getElementById('fortune-explanation');
+        const dateElement = document.getElementById('fortune-date');
+
+        // 获取今天的日期字符串（格式：YYYY-MM-DD）
+        function getTodayString() {
+            const today = new Date();
+            return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        }
+
+        // 生成或获取今日运势
+        function getDailyFortune() {
+            const today = getTodayString();
+            const storedFortune = localStorage.getItem('dailyFortune');
+            const storedDate = localStorage.getItem('fortuneDate');
+
+            if (storedFortune && storedDate === today) {
+                // 如果今天已经有运势记录，则使用存储的结果
+                return JSON.parse(storedFortune);
+            } else {
+                // 否则生成新的运势结果
+                const randomIndex = Math.floor(Math.random() * fortunes.length);
+                const newFortune = fortunes[randomIndex];
+                
+                // 存储到localStorage
+                localStorage.setItem('dailyFortune', JSON.stringify(newFortune));
+                localStorage.setItem('fortuneDate', today);
+                
+                return newFortune;
+            }
+        }
+
+        // 显示运势结果
+        function displayFortune() {
+            const fortune = getDailyFortune();
+            
+            resultElement.textContent = fortune.level;
+            resultElement.className = `fortune-result ${fortune.colorClass}`;
+            
+            explanationElement.textContent = fortune.explanation;
+            dateElement.textContent = `更新日期：${getTodayString()}`;
+        }
+
+        // 页面加载时显示运势
+        displayFortune();
+    </script>
+    
+    <div class="other-content">
+        <h2 class="header-no-image">这里是同舟！一个io游戏跨游组织！</h2>
+        <p>我们主要制作Bloxd材质包</p>
+        <hr class="divider">
+        <h2 class="header-no-image">发展历程/前身</h2>
+        <p>同舟原先是Bloxd生存114514服务器中的一个中型玩家社区，由Vanco发起，取名自"同舟共济"，意在创造一片和平之地</p>
+        <p>（Vanco在114514创立的Sanctuary组织宗旨亦是如此）</p>
+        <p>2024年末，同舟社区几名高层领导(Vanco/yang/lsgd等人)经过讨论，与服务器内其他组织沟通合作，建立了同舟联盟(TongZhouUnited)</p>
+        <p>随着yang/lsgd等人的退游，同舟联盟宣告解散，但Sanctuary与服务器内各大组织仍有联盟关系</p>
+        <p>2025年4月，同舟组织作为一个跨服组织的构想被提出，但一直未被实现</p>
+        <p>2025年6月18日，同舟组织正式宣告成立，确立方向为制作材质包，在通常情况下，也会起到游戏车队的作用</p>
+        <p>同月19日，同舟官网建立（尽管这是静态网站且并不是因为同舟而取得的域名）</p>
+        <hr class="divider">
+        <h2 class="header">当前成员</h2>
+        <div class="members-container">
+          <div class="members-column">
+            <div class="jump-button" onclick="window.location.href='https://space.bilibili.com/3546566707120309'">
+              Vanco
+            </div>
+            <div class="jump-button" onclick="window.location.href='https://space.bilibili.com/3537124666116935'">
+              Blocklouds积云
+            </div>
+            <div class="jump-button" onclick="window.location.href='https://space.bilibili.com/3546388900088449'">
+              Kuse_jackson
+            </div>
+          </div>
+          <div class="members-column">
+            <div class="jump-button" onclick="window.location.href='https://space.bilibili.com/1574838650'">
+              卖冬梅的小卖部
+            </div>
+            <div class="jump-button" onclick="window.location.href='https://space.bilibili.com/67493651'">
+              ULB(一只贾贾贾)
+            </div>
+            <div class="jump-button" onclick="window.location.href='https://space.bilibili.com/3546653126560594'">
+              31124
+            </div>
+          </div>
+          <div class="members-column">
+            <div class="jump-button" onclick="window.location.href='https://space.bilibili.com/3546689208060493'">
+              xh_code_techQX
+            </div>
+          
+          </div>        
+        </div>         
+<!--        <hr class="divider">
+        <h2 class="header">材质包技术支持/合作</h2>
+        <div><button class="jump-button" onclick="window.location.href='https://space.bilibili.com/1574838650'">
+        卖冬梅的小卖部
+        </button></div>
+        -->
+        <hr class="divider">        
+        <h2 class="header">加入需求</h2>
+        <p>需要有tailchat账号或者有盒子im账号(现场注册也行)</p>
+        <p>tailchat加入请点击右上角“加入我们”</p>
+        <p>盒子im加入请于盒子im网页内加Vanco好友（用户名Vanco）</p>
+        <h3>或</h3>
+        <p>加入florr公会[PhigrosPlayer]</p>
+        <hr class="divider">        
+        <h2 class="header">旗下内容</h2>
+        <p>（可左右滑动）</p>
+        <div class="horizontal-scroll-container">
+          <div class="section-card">
+            <img src="https://iili.io/FC8thV2.png"  class="card-image" alt="BetterBloXD">
+            <div class="card-content">
+              <h3 class="card-title">BetterBloXD</h3>
+              <p class="card-description">原万科材质，注重页面css修改，代码自主完成度高，给您带来眼前一亮的感受</p>
+            </div>
+          </div>
+          
+          <div class="section-card">
+            <img src="https://iili.io/3XhNqrb.png"  class="card-image" alt="NEXTGEN">
+            <div class="card-content">
+              <h3 class="card-title">NEXTGEN</h3>
+              <p class="card-description">由Blocklouds积云制作，MC高版本风格，海纳百川与充满创新的材质包，拥有水影般灵动简约的UI和较高的完成度</p>
+            </div>
+          </div>
+          
+          <div class="section-card">
+            <img src="https://iili.io/3X38wpp.png"  class="card-image" alt="accsaver">
+            <div class="card-content">
+              <h3 class="card-title">Bloxd账号保存站</h3>
+              <p class="card-description">结合插件和网页，防止您的账号丢失</p>
+            </div>
+          </div>          
+          
+          
+          <div class="section-card">
+            <img src="https://iili.io/FEYaPcu.png"  class="card-image" alt="Sanctuary LOGO">
+            <div class="card-content">
+              <h3 class="card-title">Sanctuary公会</h3>
+              <p class="card-description">在<a href="https://bloxd.io/play/classic_survival/114514" target="_blank">生存114514服务器</a>内的萌新友好公会</p>
+            </div>
+          </div>
+          
+          <div class="section-card">
+            <img src="https://iili.io/3X38wpp.png"  class="card-image" alt="TZ LOGO">
+            <div class="card-content">
+              <h3 class="card-title">PhigrosPlayer公会</h3>
+              <p class="card-description">在<a href="https://florr.io/" target="_blank">florr.io</a>内的国人公会</p>
+            </div>
+          </div>        
+        </div>
+      <hr class="divider">    
+      <h5>=·=·=·=·=·=·=·=·=·=  TongZhou© 2025  =·=·=·=·=·=·=·=·=·=</h5>
+      <h5>所有代码版权归属同舟组织及其成员，保留一切权利</h5>
+    </div>
+
+</body>
+</html>
